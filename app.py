@@ -13,7 +13,7 @@ import like_count_pb2
 import uid_generator_pb2
 import time
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import random
 import os
 import urllib.parse
@@ -27,8 +27,9 @@ tracker = defaultdict(lambda: [0, time.time()])  # IP based tracking
 liked_cache = defaultdict(set)
 
 def get_today_midnight_timestamp():
-    now = datetime.now()
-    midnight = datetime(now.year, now.month, now.day)
+    bd_tz = timezone(timedelta(hours=6))
+    now = datetime.now(bd_tz)
+    midnight = datetime(now.year, now.month, now.day, tzinfo=bd_tz)
     return midnight.timestamp()
 
 def load_accounts(server_name):
@@ -325,7 +326,9 @@ def handle_requests():
         like_given = after_like - before_like
         
         status = 1 if like_given != 0 else 2
-        current_time_text = datetime.now().strftime("%I:%M %p")
+        
+        bd_tz = timezone(timedelta(hours=6))
+        current_time_text = datetime.now(timezone.utc).astimezone(bd_tz).strftime("%I:%M %p")
 
         response_payload = {
             "LikesGivenByAPI": like_given,
@@ -335,6 +338,8 @@ def handle_requests():
             "Level": player_level,
             "UID": player_id,
             "Server": server_name,
+            "ResetTime": "4:00 AM",
+            "Message": f"After 4 AM use /like {uid} again to get likes.",
             "RunningTime": current_time_text,
             "UseOnlyOne": True,
             "status": status
