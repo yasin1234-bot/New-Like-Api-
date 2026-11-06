@@ -325,7 +325,7 @@ def handle_requests():
         like_given = after_like - before_like
         
         status = 1 if like_given != 0 else 2
-        current_time_text = datetime.now().strftime("%I:%M %p") # মোবাইলের বর্তমান রানিং টাইম
+        current_time_text = datetime.now().strftime("%I:%M %p")
 
         response_payload = {
             "LikesGivenByAPI": like_given,
@@ -334,57 +334,11 @@ def handle_requests():
             "PlayerNickname": player_name,
             "Level": player_level,
             "UID": player_id,
-            "status": status,
+            "Server": server_name,
+            "RunningTime": current_time_text,
+            "UseOnlyOne": True,
+            "status": status
         }
-
-        # ═══ Status = 1 Formatting (Success with Details, Region, Time & Use Only One) ═══
-        if status == 1:
-            msg = (
-                f"[B][C][00FF00]╔══════════════════════╗\n"
-                f"[B][C][FFD700]    🎉 LIKES SENT SUCCESSFULLY\n"
-                f"[B][C][00FF00]╠══════════════════════╣\n"
-                f"[C][FFFFFF] 👤 Nickname » [00FF00]{player_name}\n"
-                f"[C][FFFFFF] 🆔 UID      » [FFFF00]{player_id}\n"
-                f"[C][FFFFFF] 🎚️ Level    » [FF69B4]{player_level}\n"
-                f"[B][C][FFFFFF] 🌍 Region  »  [FF69B4]{server_name}\n"
-                f"[C][00FFFF]──────────────────────\n"
-                f"[C][FFFFFF] ✨ Likes Given » [00FF00]+{like_given}\n"
-                f"[C][FFFFFF] 📈 Total Likes » [FFFF00]{after_like}\n"
-                f"[C][00FFFF]──────────────────────\n"
-                f"[C][FFFFFF] ⏰ Running Time » [FFA500]{current_time_text}\n"
-                f"[C][00FFFF]──────────────────────\n"
-                f"[C][00FF00] ⚡ Use Only One\n"
-                f"[B][C][00FF00]╚══════════════════════╝\n"
-                f"[C][FF00FF]⚡ YASIN × BHAI Bot"
-            )
-            response_payload["message"] = msg
-
-        # ═══ Status = 2 Formatting (Already Liked Template with Current Mobile Time & Use Only One) ═══
-        elif status == 2:
-            msg = (
-                f"[B][C][FFA500]╔══════════════════════╗\n"
-                f"[B][C][FFD700]   ⏳ ALREADY LIKED\n"
-                f"[B][C][FFA500]╠══════════════════════╣\n"
-                f"[C][FFFFFF] 👤 Nickname » [00FF00]{player_name}\n"
-                f"[C][FFFFFF] 🆔 UID      » [FFFF00]{player_id}\n"
-                f"[C][FFFFFF] 🎚️ Level    » [FF69B4]{player_level}\n"
-                f"[B][C][FFFFFF] 🌍 Region  »  [FF69B4]{server_name}\n"
-                f"[C][00FFFF]──────────────────────\n"
-                f"[C][FFFFFF] 📝 You have already received likes\n"
-                f"[C][FFFFFF] on this UID.\n"
-                f"[C][00FFFF]──────────────────────\n"
-                f"[C][FFFFFF] 🌅 Reset Time » [00FFFF]4:00 AM\n"
-                f"[C][FFFFFF] 📅 (Bangladesh Time)\n"
-                f"[C][FFFFFF] ⏰ Running Time » [FFA500]{current_time_text}\n"
-                f"[C][00FFFF]──────────────────────\n"
-                f"[C][00FF00] ✅ After 4 AM, use /like {uid}\n"
-                f"[C][00FF00] again to get likes.\n"
-                f"[C][00FFFF]──────────────────────\n"
-                f"[C][00FF00] ⚡ Use Only One\n"
-                f"[B][C][FFA500]╚══════════════════════╝\n"
-                f"[C][FF00FF]⚡ YASIN × BHAI Bot"
-            )
-            response_payload["message"] = msg
 
         return jsonify(response_payload)
         
