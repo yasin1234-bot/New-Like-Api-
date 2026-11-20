@@ -353,7 +353,7 @@ def handle_requests():
 @app.route('/reset-cache', methods=['GET'])
 def reset_cache():
     key = request.args.get("key")
-    if key != "YASIN":
+    if key != "YASIN2027":
         return jsonify({"error": "Invalid key"}), 403
     
     global liked_cache
