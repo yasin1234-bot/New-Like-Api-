@@ -1,4 +1,3 @@
-#RISHANTAPIS
 from flask import Flask, request, jsonify
 import asyncio
 from Crypto.Cipher import AES
@@ -22,6 +21,19 @@ app = Flask(__name__)
 
 KEY_LIMIT = 90
 tracker = defaultdict(lambda: [0, time.time()])  # IP based tracking
+
+# Valid API keys (add/update keys as needed; optional expiry timestamp or None for never-expiring)
+VALID_KEYS = {
+    "YASIN2027": None,
+}
+
+def is_valid_key(api_key):
+    if not api_key or api_key not in VALID_KEYS:
+        return False
+    expiry = VALID_KEYS[api_key]
+    if expiry is not None and time.time() > expiry:
+        return False
+    return True
 
 # Store which accounts have liked which UIDs (temporary memory)
 liked_cache = defaultdict(set)
@@ -262,6 +274,10 @@ def get_player_info(encrypted_uid, server_name, token):
 
 @app.route('/like', methods=['GET'])
 def handle_requests():
+    api_key = request.args.get("key")
+    if not is_valid_key(api_key):
+        return jsonify({"error": "Invalid key", "status": 0}), 403
+
     uid = request.args.get("uid")
     server_name = request.args.get("server_name", "").upper()
 
@@ -396,4 +412,4 @@ def gen_tokens():
 if __name__ == '__main__':
     print("🚀 Server started - Smart Like System!")
     app.run(host='0.0.0.0', port=5001, debug=True, use_reloader=False)
-#RISHANTAPIS
+#YASIN TxT 
